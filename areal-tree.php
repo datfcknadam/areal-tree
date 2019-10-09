@@ -9,27 +9,28 @@ function outputTree ($dir, $iterator, $search_file) {
       continue;
     }
     else {
-      if(is_file($dir.DIRECTORY_SEPARATOR.$file) && $search_file){
+      if (is_file($dir.DIRECTORY_SEPARATOR.$file) && $search_file) {
         echo $iterator."└──".$file."(".filesize($dir.DIRECTORY_SEPARATOR.$file).")\n";
       }
-      if(is_dir(($dir.DIRECTORY_SEPARATOR.$file))){
+      if (is_dir(($dir.DIRECTORY_SEPARATOR.$file))) {
         echo $iterator."└──".$file."\n";
         outputTree($dir.DIRECTORY_SEPARATOR.$file, $iterator, $search_file);
       }
     }
+
   }
   closedir($handle);
-
 }
 
 if (isset($argv[1])) {
   chdir($argv[1]);
   $dir = getcwd();
   $iterator = "|";
+
   if(empty($argv[2])) {
     outputTree($dir, $iterator, false);
   }
-  elseif($argv[2] === "-f") {
+  elseif ($argv[2] === "-f") {
     outputTree($dir, $iterator, true);
   }
   else {
