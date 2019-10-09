@@ -1,27 +1,39 @@
 #!/usr/bin/php
 <?php
+function outputTree ($dir, $iterator, $search_file) {
+  $iterator .= "   ";
+  $handle = opendir($dir);
+  while (($file = readdir($handle)) !== false) {
 
-function outputTree ($item) {
-  if(is_dir($item)){
-
-    $trees = glob( $item . '*', GLOB_MARK );
-    foreach ($trees as $tree) {
-      print "|".$item."\n";
-      outputTree($tree);
-      print "-";
+    if ($file == '.' || $file == '..') {
+      continue;
     }
+    else {
+      if(is_file($dir.DIRECTORY_SEPARATOR.$file) && $search_file){
+        echo $iterator."└──".$file."(".filesize($dir.DIRECTORY_SEPARATOR.$file).")\n";
+      }
+      if(is_dir(($dir.DIRECTORY_SEPARATOR.$file))){
+        echo $iterator."└──".$file."\n";
+      }
 
+      if (is_dir($dir.DIRECTORY_SEPARATOR.$file)) {
+        outputTree($dir.DIRECTORY_SEPARATOR.$file, $iterator, $search_file);
+      }
+    }
   }
+  closedir($handle);
+
 }
 
 if (isset($argv[1])) {
   chdir($argv[1]);
   $dir = getcwd();
-  if (isset($argv[2]) && $argv[2] === "-f") {
-    outputTree($dir);
+  $iterator = "|";
+  if(empty($argv[2])) {
+    outputTree($dir, $iterator, false);
   }
-  elseif (empty($argv[2])) {
-    $tree = scandir($dir);
+  elseif($argv[2] === "-f") {
+    outputTree($dir, $iterator, true);
   }
   else {
     echo "Error: undefined argument '".$argv[2]."'\n";
