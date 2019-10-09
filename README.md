@@ -1,5 +1,6 @@
 # areal-tree
 > A PHP project
+``` bash
 # For run
 Open the console in the file directory and write "php areal-tree.php (directory)" 
 if you want to display only folders 
