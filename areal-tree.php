@@ -14,9 +14,6 @@ function outputTree ($dir, $iterator, $search_file) {
       }
       if(is_dir(($dir.DIRECTORY_SEPARATOR.$file))){
         echo $iterator."└──".$file."\n";
-      }
-
-      if (is_dir($dir.DIRECTORY_SEPARATOR.$file)) {
         outputTree($dir.DIRECTORY_SEPARATOR.$file, $iterator, $search_file);
       }
     }
