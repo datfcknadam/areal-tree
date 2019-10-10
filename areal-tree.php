@@ -7,7 +7,6 @@ class Tree {
     $size = filesize($path);
     $units = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
     $power = $size > 0 ? floor(log($size, 1024)) : 0;
-
     return number_format($size / pow(1024, $power), 2, '.', ',') . ' ' . $units[$power];
   }
 
@@ -17,23 +16,33 @@ class Tree {
   }
 
   function outputTree ($dir, $iterator, $search_file) {
-    $iterator .= "   ";
-    $handle = opendir($dir);
+    $iterator .= "|  ";
+    $trees = array_diff(scandir($dir), array('..', '.'));
 
-    while (($file = readdir($handle)) !== false) {
+    foreach($trees as $key => $file) {
+      if($file == end($trees)){
 
-      if ($file == '.' || $file == '..') {
+        if (is_file($dir.DIRECTORY_SEPARATOR.$file) && $search_file) {
+          echo $iterator."└──".$file."(".$this->filesize_formatted($dir.DIRECTORY_SEPARATOR.$file).")\n";
+        }
+        if (is_dir($dir.DIRECTORY_SEPARATOR.$file)) {
+
+          echo $iterator."└──".$file."\n";
+          $this->outputTree($dir.DIRECTORY_SEPARATOR.$file, $iterator, $search_file);
+        }
         continue;
       }
+
       if (is_file($dir.DIRECTORY_SEPARATOR.$file) && $search_file) {
-        echo $iterator."└──".$file."(".$this->filesize_formatted($dir.DIRECTORY_SEPARATOR.$file).")\n";
+
+        echo $iterator."├──".$file."(".$this->filesize_formatted($dir.DIRECTORY_SEPARATOR.$file).")\n";
       }
       if (is_dir($dir.DIRECTORY_SEPARATOR.$file)) {
-        echo $iterator."└──".$file."\n";
+
+        echo $iterator."├──".$file."\n";
         $this->outputTree($dir.DIRECTORY_SEPARATOR.$file, $iterator, $search_file);
       }
     }
-    closedir($handle);
   }
 
   public function output() {
@@ -46,7 +55,6 @@ class Tree {
       $dir = getcwd();
       $iterator = "";
       $this->outputTree($dir, $iterator, $this->is_arg);
-
     }
     catch (Exception $e) {
       echo $e->getMessage();
