@@ -2,6 +2,7 @@
 class Tree {
   public $is_dir;
   public $is_arg;
+  private $end = true;
 
   function filesize_formatted($path) {
     $size = filesize($path);
@@ -16,29 +17,37 @@ class Tree {
   }
 
   function outputTree ($dir, $iterator, $search_file) {
-    $iterator .= "|  ";
+
+    if (!$this->end) {
+    $iterator .= "|   ";
+    }
+    else{
+      $iterator .= "    ";
+    }
+
     $trees = array_diff(scandir($dir), array('..', '.'));
 
     foreach($trees as $key => $file) {
       if($file == end($trees)){
+        $this->end = true;
 
         if (is_file($dir.DIRECTORY_SEPARATOR.$file) && $search_file) {
           echo $iterator."└──".$file."(".$this->filesize_formatted($dir.DIRECTORY_SEPARATOR.$file).")\n";
         }
-        if (is_dir($dir.DIRECTORY_SEPARATOR.$file)) {
 
+        if (is_dir($dir.DIRECTORY_SEPARATOR.$file)) {
           echo $iterator."└──".$file."\n";
           $this->outputTree($dir.DIRECTORY_SEPARATOR.$file, $iterator, $search_file);
         }
         continue;
       }
 
-      if (is_file($dir.DIRECTORY_SEPARATOR.$file) && $search_file) {
+      $this->end = false;
 
+      if (is_file($dir.DIRECTORY_SEPARATOR.$file) && $search_file) {
         echo $iterator."├──".$file."(".$this->filesize_formatted($dir.DIRECTORY_SEPARATOR.$file).")\n";
       }
       if (is_dir($dir.DIRECTORY_SEPARATOR.$file)) {
-
         echo $iterator."├──".$file."\n";
         $this->outputTree($dir.DIRECTORY_SEPARATOR.$file, $iterator, $search_file);
       }
@@ -46,7 +55,6 @@ class Tree {
   }
 
   public function output() {
-
     try {
       if ($this->is_arg && $this->is_arg !== "-f") {
         throw new Exception("Error: undefined argument '".$this->is_arg."'\n");
@@ -62,3 +70,4 @@ class Tree {
   }
 }
 ?>
+
