@@ -1,5 +1,6 @@
 ﻿<?php
-  require_once "areal-tree.php";
+  require_once "tree.php";
+  $tree = new Tree();
 
   try {
     if (empty($argv[1])) {
@@ -8,16 +9,14 @@
     if (!is_dir($argv[1])) {
       throw new Exception("Error: such directory not found.\n");
     }
-    if(isset($argv[2])) {
-      $tree = new Tree($argv[1], $argv[2]);
+    if (isset($argv[2])) {
+      $tree->output($argv[1], $argv[2]);
     }
     else {
-      $tree = new Tree($argv[1], null);
+      $tree->output($argv[1], null);
     }
-    echo $tree->output();
   }
-  catch(Exception $e) {
+  catch (Exception $e) {
     echo $e->getMessage();
   }
-
 ?>
