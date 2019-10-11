@@ -20,7 +20,7 @@ class Tree {
   function outputTree ($dir, $iterator, $search_file) {
 
     if (!$this->end) {
-    $iterator .= "❘   ";
+    $iterator .= "|   ";
     }
     else{
       $iterator .= "    ";
