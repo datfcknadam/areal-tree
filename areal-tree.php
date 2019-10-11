@@ -3,6 +3,7 @@ class Tree {
   public $is_dir;
   public $is_arg;
   private $end = true;
+  public $trees_only_dir = array();
 
   function filesize_formatted($path) {
     $size = filesize($path);
@@ -26,6 +27,18 @@ class Tree {
     }
 
     $trees = array_diff(scandir($dir), array('..', '.'));
+
+    if (!$search_file) {
+      foreach ($trees as $key => $file) {
+
+        if (is_dir($file)) {
+          array_push($this->trees_only_dir, $file);
+          $trees = $this->trees_only_dir;
+        }
+      }
+      $this->trees_only_dir = array();
+    }
+
 
     foreach($trees as $key => $file) {
       if($file == end($trees)){
