@@ -13,8 +13,8 @@ class Tree {
   }
 
   public function __construct($is_dir, $is_arg) {
-      $this->is_dir = $is_dir;
-      $this->is_arg = $is_arg;
+    $this->is_dir = $is_dir;
+    $this->is_arg = $is_arg;
   }
 
   function outputTree ($dir, $iterator, $search_file) {
