@@ -39,7 +39,6 @@ class Tree {
       $this->trees_only_dir = array();
     }
 
-
     foreach($trees as $key => $file) {
       if($file == end($trees)){
         $this->end = true;
